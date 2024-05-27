@@ -14,24 +14,23 @@ export const AppProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
 
   const handleClick = (event: MouseEvent) => {
     let cardArray = setCardStatuses(cards, event)
-    const openCards = findOpenCards(cardArray)
     setCards(cardArray)
-   
-    if (openCards.length === 2) {
-      console.log('wtf', resetCardsArray(cardArray, openCards))
-
-      setTimeout(() => setCards(resetCardsArray(cardArray, openCards)), 400)
-      return;
-    }
   }
 
   useEffect(()=> {
+    async function fetchData() {
+      const response = await fetch('/api/images');
+      const data = await response.json();
+      console.log('4', data);
+    }
+    fetchData();
+
     setCards(cardCreater(imgSourceArray))
   }, [])
 
 
   return (
-    <AppContext.Provider value={{ cards, handleClick }}>
+    <AppContext.Provider value={{ cards, handleClick, setCards }}>
       {children}
     </AppContext.Provider>
   );

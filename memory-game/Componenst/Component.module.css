@@ -12,9 +12,9 @@
 }
 
 
-/* .card:hover .cardInner {
+.open {
     transform: rotateY(180deg);
-} */
+}
 
 .cardFront,
 .cardBack {
@@ -22,17 +22,14 @@
     height: 100%;
     position: absolute;
     backface-visibility: hidden;
-    /* Hide backside during flip */
+
 }
 
 .cardFront {
     background-color: #ccc;
-    /* Front side color */
 }
 
 .cardBack {
     background-color: #fff;
-    /* Back side color */
     transform: rotateY(180deg);
-    /* Start flipped away */
 }
