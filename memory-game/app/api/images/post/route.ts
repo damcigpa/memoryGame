@@ -8,12 +8,15 @@ export async function POST(req: Request) {
     try {
         const formData = await req.formData();
         const file = formData.get("file") as File;
+        const text = formData.get("text") as string;
+        console.log(file, text);
         const arrayBuffer = await file.arrayBuffer();
         const buffer = new Uint8Array(arrayBuffer);
         await fs.writeFile(`./public/upload/${new Date(Date.now()).getTime()}${file.name}`, buffer);
         const result = await prism.image.create({
             data: {  
-                url: `/upload/${new Date(Date.now()).getTime()}${file.name}`
+                url: `/upload/${file.name}`,
+                text: text,
             }
         });
         revalidatePath("/");

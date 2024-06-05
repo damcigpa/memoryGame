@@ -4,6 +4,7 @@ import { useState, useRef, Suspense } from 'react';
 
 export default function Home() {
     const [file, setFile] = useState<File | null>(null);
+    const [text, setText] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const ref = useRef<HTMLInputElement>(null);
 
@@ -11,6 +12,10 @@ export default function Home() {
         if (e.target.files) {
             setFile(e.target.files[0]);
         }
+    };
+
+    const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setText(e.target.value);
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -21,6 +26,7 @@ export default function Home() {
 
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('text', text || '');
 
         const res = await fetch('/api/images/post', {
             method: 'POST',
@@ -38,6 +44,7 @@ export default function Home() {
             <h1>Upload a File</h1>
             <form onSubmit={handleSubmit}>
                 <input type="file" onChange={handleFileChange} ref={ref}/>
+                <input type="text" onChange={handleTextChange} value={text}/>
                 <button type="submit">Upload</button>
             </form>
             {loading && <p>Loading...</p>}

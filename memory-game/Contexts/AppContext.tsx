@@ -19,7 +19,7 @@ export const AppProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
 
   useEffect(()=> {
     async function fetchData() {
-      const response = await fetch('/api/images');
+      const response = await fetch('/api/images/get');
       const data = await response.json();
       console.log('4', data);
     }
