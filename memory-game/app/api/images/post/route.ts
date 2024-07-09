@@ -9,14 +9,15 @@ export async function POST(req: Request) {
         const formData = await req.formData();
         const file = formData.get("file") as File;
         const text = formData.get("text") as string;
-        console.log(file, text);
+        console.log('file',file, text);
         const arrayBuffer = await file.arrayBuffer();
         const buffer = new Uint8Array(arrayBuffer);
-        await fs.writeFile(`./public/upload/${new Date(Date.now()).getTime()}${file.name}`, buffer);
+        await fs.writeFile(`./public/upload/${file.name}`, buffer);
         const result = await prism.image.create({
             data: {  
                 url: `/upload/${file.name}`,
                 text: text,
+                open: false,
             }
         });
         revalidatePath("/");

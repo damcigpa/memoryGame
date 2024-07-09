@@ -1,32 +1,43 @@
 'use client'
 
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
-import { cardCreater, setCardStatuses, findOpenCards, resetCardsArray } from '@/Helpers/Helpers';
+import React, { createContext, useState, useContext, useEffect, ReactNode, Dispatch, SetStateAction } from 'react';
+import useFetch from '@/app/Hooks/useFetch';
+import { cardCreater, setCardStatuses, findOpenCards, resetCardsArray, arrayShuffler} from '@/Helpers/Helpers';
+import Image from 'next/image';
 
 interface AppContextProps {
-  cards: [];
-}
-
-interface ImageListProps {
-  data: any[];
+  cards: Image[];
+  handleClick: (event: MouseEvent) => void;
+  setCards: Dispatch<SetStateAction<Image[]>>,
 }
 
 interface Image {
   id: number;
   url: string;
   text: string;
+  open: boolean;
 }
+
+interface ImageListProps {
+  data: any[];
+}
+
 
 interface Data {
   img: Image[]
 }
 
-const AppContext = createContext<AppContextProps>({cards: []});
+const AppContext = createContext<AppContextProps>({
+  cards: [],
+  handleClick: function (event: MouseEvent): void {
+    throw new Error('Function not implemented.');
+  },
+  setCards: Dispatch<SetStateAction<Image[]>>,
+});
 
 export const AppProvider: React.FC<{ children: ReactNode }>  = ({ children }) => {
-  const [cards, setCards] = useState([]);
-  const [data, setData] = useState<Data>({img:[]})
-  const imgSourceArray = ['./flower.jpg', './landscape.jpg', './close-up.jpg'];
+  const dataObject = useFetch();
+  const [cards, setCards] = useState<Image[]>([]);
 
   const handleClick = (event: MouseEvent) => {
     let cardArray = setCardStatuses(cards, event)
@@ -34,22 +45,21 @@ export const AppProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
   }
 
 
-  useEffect(()=> {
-    // async function fetchData() {
-    //   const response = await fetch('/api/images/get');
-    //   const data = await response.json();
-    //   console.log('4', data);
-    // }
-    // fetchData();
-
-
-    fetchContent('http://localhost:3000/api/images/get')
-    setCards(cardCreater(imgSourceArray))
-  }, [])
+  useEffect(() => {
+    if ((dataObject as unknown as Data)?.img) {
+      let newObjects = (dataObject as unknown as Data).img.map((el: Image, index: number) => {
+        return {
+        ...el,
+        id: index + 1,
+      }});
+      let array = [...(dataObject as unknown as Data).img, ...newObjects];
+      setCards(arrayShuffler(array))
+    }
+  }, [dataObject]);
 
 
   return (
-    <AppContext.Provider value={{ cards, handleClick, setCards, fetchContent, data }}>
+    <AppContext.Provider value={{ cards, handleClick, setCards }}>
       {children}
     </AppContext.Provider>
   );

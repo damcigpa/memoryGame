@@ -1,11 +1,13 @@
 'use client'
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
+import { useImagePageContext } from '@/Contexts/ImagePageContext';
 
 export default function Form() {
     const [file, setFile] = useState<File | null>(null);
     const [text, setText] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
-    const ref = useRef<HTMLInputElement>(null);
+    const ref = useRef<HTMLInputElement>('');
+    const {init} = useImagePageContext()
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -32,7 +34,10 @@ export default function Form() {
             body: formData,
         });
 
+        init();
+
         if (ref.current) {
+            console.log('c');
             ref.current.value = '';
         }
         setLoading(false);
@@ -42,8 +47,8 @@ export default function Form() {
         <div>
             <h1>Upload a File</h1>
             <form onSubmit={handleSubmit}>
-                <input type="file" onChange={handleFileChange} ref={ref} />
-                <input type="text" onChange={handleTextChange} value={text} />
+                <input type="file" onChange={handleFileChange} />
+                <input type="text" onChange={handleTextChange} ref={ref}/>
                 <button type="submit">Upload</button>
             </form>
             {loading && <p>Loading...</p>}

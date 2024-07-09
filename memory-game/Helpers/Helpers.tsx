@@ -1,11 +1,11 @@
   export default interface Card {
   id: number;
   value: number;
-  imgSrc: string;
+  url: string;
   open: boolean;
 }
   
-  const arrayShuffler = (array: Card[]): Card[] => {
+  export const arrayShuffler = (array: Card[]): Card[] => {
     for (let i = array.length - 1; i > 0; i--) {
       let generatedIndex = Math.floor(Math.random() * (i + 1));
   
@@ -58,13 +58,15 @@
     })
   }
 
-  export const resetCardsArray = (arrayFirst: Card[], arraySecond: Card[]): Card[] => {
-    let doOpenElementsHaveSameImages = arraySecond.every(card => card.imgSrc === arraySecond[0].imgSrc);
+  export const doOpenElementsHaveSameImages = (arr: Card[]): boolean => {
+   return arr.every(card => card.url === arr[0].url)
+  }
 
-    if (doOpenElementsHaveSameImages) {
-      return arrayFirst.filter(item => !arraySecond.includes(item));
-    } 
+export const filterArray = (arrayFirst: Card[], arraySecond: Card[]): Card[] => {
+  return arrayFirst.filter(item => !arraySecond.includes(item));
+}
 
+  export const resetCardsArray = (arrayFirst: Card[]): Card[] => {
     return arrayFirst.map((e) => {
       return { ...e, open: false }
     })

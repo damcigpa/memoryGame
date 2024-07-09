@@ -1,10 +1,13 @@
 
 'use client'
 import React, {useEffect, useState, useContext} from "react";
-import { useAppContext } from "@/Contexts/AppContext";
+import { useImagePageContext } from '@/Contexts/ImagePageContext';
 
-const ImageList: React.FC<ImageListProps> = ({ handleFetch, data}) => {
-    console.log(data)
+const ImageList = ({data}) => {
+    const {init} = useImagePageContext()
+    console.log('here', data)
+
+
     
     const handleDelete = async (event: React.MouseEvent<HTMLImageElement>) => {
         try {
@@ -15,7 +18,8 @@ const ImageList: React.FC<ImageListProps> = ({ handleFetch, data}) => {
             if (response.ok) {
                 // Handle successful deletion
                 console.log('Item deleted successfully');
-                handleFetch('http://localhost:3000/api/images/get');
+                init()
+            
             } else {
                 // Handle error
                 console.error('Failed to delete the item');
@@ -26,9 +30,10 @@ const ImageList: React.FC<ImageListProps> = ({ handleFetch, data}) => {
     };
 
 
+
     return (
         <div>
-            {data.img.map((image) => (
+            {data?.img?.map((image) => (
                 <img 
                 key={image.id} 
                 id={image.id.toString()} 
