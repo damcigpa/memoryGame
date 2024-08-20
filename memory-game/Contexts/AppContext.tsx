@@ -40,7 +40,7 @@ export const AppProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
   const [cards, setCards] = useState<Image[]>([]);
 
   const handleClick = (event: MouseEvent) => {
-    let cardArray = setCardStatuses(cards, event)
+    let cardArray = setCardStatuses(cards as Card[], event)
     setCards(cardArray)
   }
 

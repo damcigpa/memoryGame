@@ -1,7 +1,7 @@
   export default interface Card {
   id: number;
   value: number;
-  url: string;
+  imgSrc: string;
   open: boolean;
 }
   
